@@ -5,7 +5,6 @@ import java.util.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.acme.dom.Ad;
 import com.acme.dom.Newspaper;
 import com.acme.repository.NewspaperRepository;
 

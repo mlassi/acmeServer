@@ -4,14 +4,11 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -22,12 +19,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
-import com.acme.test.builder.AdBuilder;
-import com.acme.test.builder.NewspaperBuilder;
 import com.acme.dom.Ad;
 import com.acme.dom.Newspaper;
-import com.acme.test.util.TestUtil;
 import com.acme.repository.AdRepository;
+import com.acme.test.builder.AdBuilder;
+import com.acme.test.builder.NewspaperBuilder;
 
 public class AdRepositoryServiceTest {
 
@@ -144,11 +140,9 @@ public class AdRepositoryServiceTest {
     Newspaper newspaper =
         NewspaperBuilder.aNewspaper().withId(2L).withPublicationName("publication").build();
 
-    // when(adServiceMock.postAdToNewspaper(eq(1L), any(Newspaper.class))).thenReturn(ad);
     when(repositoryMock.findOne(1L)).thenReturn(adToCancel);
     service.cancelAdInNewspaper(1L, newspaper);
-    // when(repositoryMock.postAdToNewspaper(eq(1L), any(Newspaper.class))).thenReturn(ad);
-    ArgumentCaptor<Ad> adArgument = ArgumentCaptor.forClass(Ad.class);
+
     verify(repositoryMock, times(1)).findOne(1L);
     verify(repositoryMock, times(1)).save(any(Ad.class));
     verifyNoMoreInteractions(repositoryMock);

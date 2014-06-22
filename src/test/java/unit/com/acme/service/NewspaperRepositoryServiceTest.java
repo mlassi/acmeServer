@@ -14,16 +14,13 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
-import com.acme.test.builder.AdBuilder;
-import com.acme.test.builder.NewspaperBuilder;
-import com.acme.dom.Ad;
 import com.acme.dom.Newspaper;
 import com.acme.repository.NewspaperRepository;
+import com.acme.test.builder.NewspaperBuilder;
 
 public class NewspaperRepositoryServiceTest {
 
