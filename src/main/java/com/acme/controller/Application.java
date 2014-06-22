@@ -1,12 +1,16 @@
-package com.acme.web.controller;
+package com.acme.controller;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+
+import com.acme.config.PersistenceContext;
 
 @Configuration
-@ComponentScan
+@ComponentScan("com.acme")
+@Import({PersistenceContext.class})
 @EnableAutoConfiguration
 public class Application {
 
