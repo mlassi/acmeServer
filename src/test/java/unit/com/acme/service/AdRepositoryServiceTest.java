@@ -22,6 +22,7 @@ import org.mockito.ArgumentCaptor;
 import com.acme.dom.Ad;
 import com.acme.dom.Newspaper;
 import com.acme.repository.AdRepository;
+import com.acme.repository.NewspaperRepository;
 import com.acme.test.builder.AdBuilder;
 import com.acme.test.builder.NewspaperBuilder;
 
@@ -29,7 +30,7 @@ public class AdRepositoryServiceTest {
 
   private AdRepositoryService service;
   private AdRepository repositoryMock;
-
+  
   @Before
   public void setUp() {
     repositoryMock = mock(AdRepository.class);
@@ -55,10 +56,10 @@ public class AdRepositoryServiceTest {
         AdBuilder.anAd().withId(1).withAdTitle("foo").withAdDescription("bar").build();
     Ad secondSetupAd =
         AdBuilder.anAd().withId(1).withAdTitle("foo").withAdDescription("bar").build();
-    Collection<Ad> setupList = new HashSet<Ad>(Arrays.asList(firstSetupAd, secondSetupAd));
+    Iterable<Ad> setupList = new HashSet<Ad>(Arrays.asList(firstSetupAd, secondSetupAd));
     when(repositoryMock.findAll()).thenReturn(setupList);
 
-    Collection<Ad> returnedAds = service.findAll();
+    Iterable<Ad> returnedAds = service.findAll();
 
     verify(repositoryMock, times(1)).findAll();
     verifyNoMoreInteractions(repositoryMock);

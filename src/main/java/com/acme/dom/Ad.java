@@ -6,6 +6,7 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -36,16 +37,20 @@ public class Ad implements Identifiable<Long>, Serializable {
   @Column(name = "description")
   private String description;
 
-  @ManyToMany
+  @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(name = "ads_newspapers", joinColumns = {@JoinColumn(name = "ads_id",
       referencedColumnName = "id")}, inverseJoinColumns = {@JoinColumn(name = "newspapers_id",
       referencedColumnName = "id")})
-  private Set<Newspaper> newspapers = new HashSet<Newspaper>();
+  private Set<Newspaper> newspapers;
   // private AdCategoryType adCategoryType;
   // private Date publishOnDate;
 
   public Ad() {
 
+  }
+
+  public Set<Newspaper> getNewspapers() {
+    return this.newspapers;
   }
 
   @Override
@@ -74,12 +79,18 @@ public class Ad implements Identifiable<Long>, Serializable {
   // }
 
   public void addNewspaper(Newspaper newspaper) {
+	if(this.newspapers == null) {
+		this.newspapers = new HashSet<Newspaper>();
+	}
     this.newspapers.add(newspaper);
   }
 
-  public void removeNewspaper(Newspaper newspaper) {
-    this.newspapers.remove(newspaper);
-  }
+	public void removeNewspaper(Newspaper newspaper) {
+		if (this.newspapers == null) {
+			this.newspapers = new HashSet<Newspaper>();
+		}
+		this.newspapers.remove(newspaper);
+	}
 
   /*
    * public AdCategoryType getAdCategoryType() { return adCategoryType; }

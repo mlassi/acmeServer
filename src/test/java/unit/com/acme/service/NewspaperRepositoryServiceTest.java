@@ -11,7 +11,6 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashSet;
 
 import org.junit.Before;
@@ -54,11 +53,11 @@ public class NewspaperRepositoryServiceTest {
     Newspaper secondNewspaper =
         NewspaperBuilder.aNewspaper().withId(2).withPublicationName("second").build();
 
-    Collection<Newspaper> setupList =
+    Iterable<Newspaper> setupList =
         new HashSet<Newspaper>(Arrays.asList(firstNewspaper, secondNewspaper));
     when(repositoryMock.findAll()).thenReturn(setupList);
 
-    Collection<Newspaper> returnedNewspapers = service.findAll();
+    Iterable<Newspaper> returnedNewspapers = service.findAll();
 
     verify(repositoryMock, times(1)).findAll();
     verifyNoMoreInteractions(repositoryMock);

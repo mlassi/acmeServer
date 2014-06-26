@@ -38,7 +38,7 @@ public class NewspaperController {
   }
 
   @RequestMapping(method = RequestMethod.GET)
-  Collection<Newspaper> retrieveAllNewspapers() {
+  Iterable<Newspaper> retrieveAllNewspapers() {
     return this.newspaperService.findAll();
   }
 

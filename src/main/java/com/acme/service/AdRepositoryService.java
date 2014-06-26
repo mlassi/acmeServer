@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.acme.dom.Ad;
 import com.acme.dom.Newspaper;
@@ -26,14 +27,16 @@ public class AdRepositoryService implements AdService {
 
   @Override
   public Collection<Ad> findAll() {
-    return (Collection<Ad>) this.adRepository.findAll();
+    return  (Collection<Ad>) this.adRepository.findAll();
   }
 
+  @Transactional(rollbackFor = {Exception.class})
   @Override
   public Ad save(Ad ad) {
     return this.adRepository.save(ad);
   }
 
+  @Transactional(rollbackFor = {Exception.class})
   @Override
   public Ad deleteById(long id) {
     Ad foundAd = this.findById(id);

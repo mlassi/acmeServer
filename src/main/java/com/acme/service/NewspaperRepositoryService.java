@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.acme.dom.Newspaper;
 import com.acme.repository.NewspaperRepository;
@@ -28,11 +29,13 @@ public class NewspaperRepositoryService implements NewspaperService {
     return (Collection<Newspaper>) this.newspaperRepository.findAll();
   }
 
+  @Transactional(rollbackFor = {Exception.class})
   @Override
   public Newspaper save(Newspaper newspaper) {
     return this.newspaperRepository.save(newspaper);
   }
 
+  @Transactional(rollbackFor = {Exception.class})
   @Override
   public Newspaper deleteById(long id) {
     Newspaper deletingNewspaper = this.findById(id);

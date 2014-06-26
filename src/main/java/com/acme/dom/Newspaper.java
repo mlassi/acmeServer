@@ -1,12 +1,15 @@
 package com.acme.dom;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import org.hibernate.validator.constraints.NotEmpty;
@@ -26,6 +29,17 @@ public class Newspaper implements Identifiable<Long>, Serializable {
   @Column(name = "name")
   @NotEmpty
   private String publicationName;
+
+
+  @ManyToMany(mappedBy = "newspapers")
+  private Set<Ad> ads;
+
+  public void addAd(Ad ad) {
+    if (ads == null) {
+      this.ads = new HashSet<Ad>();
+    }
+    this.ads.add(ad);
+  }
 
   @Override
   public Long getId() {

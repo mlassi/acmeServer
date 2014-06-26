@@ -83,7 +83,8 @@ public class AdControllerTest {
     Ad second =
         AdBuilder.anAd().withId(2L).withAdTitle("second ad").withAdDescription("duo").build();
 
-    when(adServiceMock.findAll()).thenReturn(Arrays.asList(first, second));
+    //when(adServiceMock.findAll()).thenReturn(Arrays.asList(first, second));
+    when(adServiceMock.findAll()).thenReturn((Arrays.asList(first, second)));
 
     mockMvc.perform(get("/ads")).andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(2)))
         .andExpect(jsonPath("$[0].id", is(1))).andExpect(jsonPath("$[0].description", is("uno")))
