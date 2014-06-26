@@ -14,9 +14,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
+import com.acme.test.util.TestUtil;
+import com.acme.test.builder.*;
 import java.util.Arrays;
 
 import org.junit.Before;
@@ -28,6 +30,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.acme.test.builder.AdBuilder;
@@ -132,10 +135,20 @@ public class AdControllerTest {
   public void addAd_EmptyAd_ShouldReturnInvalidRequest() throws Exception {
     Ad ad = new Ad();
 
-    mockMvc.perform(
-        post("/ads").contentType(TestUtil.APPLICATION_JSON_UTF8).content(
-            TestUtil.convertObjectToJsonBytes(ad))).andExpect(status().isBadRequest());
+		MvcResult result = mockMvc
+				.perform(
+						post("/ads")
+								.contentType(TestUtil.APPLICATION_JSON_UTF8)
+								.content(TestUtil.convertObjectToJsonBytes(ad)))
+				.andExpect(status().isBadRequest())
+				.andReturn();
+		// .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+		// .andExpect(jsonPath("$.fieldErrorsgjhgjgjh", hasSize(1)))
+		// .andExpect(jsonPath("$.fieldErrors[0].path", is("title")))
+		// .andExpect(jsonPath("$.fieldErrors[0].message",
+		// is("The title cannot be empty.")));
 
+   String content = result.getResponse().getContentAsString();
     verifyZeroInteractions(adServiceMock);
   }
 

@@ -11,7 +11,6 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashSet;
 
 import org.junit.Assert;
@@ -22,7 +21,6 @@ import org.mockito.ArgumentCaptor;
 import com.acme.dom.Ad;
 import com.acme.dom.Newspaper;
 import com.acme.repository.AdRepository;
-import com.acme.repository.NewspaperRepository;
 import com.acme.test.builder.AdBuilder;
 import com.acme.test.builder.NewspaperBuilder;
 

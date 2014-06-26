@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.context.NoSuchMessageException;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
@@ -19,79 +20,79 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.acme.controller.error.ErrorCollection;
 
+/**
+ * 
+ * This class handles validation and parsing errors
+ *
+ */
 @ControllerAdvice
 public class RestErrorHandler {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(RestErrorHandler.class);
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(RestErrorHandler.class);
 
-  private MessageSource messageSource;
+	private MessageSource messageSource;
 
-  @Autowired
-  public RestErrorHandler(MessageSource messageSource) {
-    this.messageSource = messageSource;
-  }
+	@Autowired
+	public RestErrorHandler(MessageSource messageSource) {
+		this.messageSource = messageSource;
+	}
 
-  @ExceptionHandler(value = Exception.class)
-  @ResponseStatus(HttpStatus.BAD_REQUEST)
-  @ResponseBody
-  public ErrorCollection processValidationError(Exception ex) {
-    ErrorCollection errors = new ErrorCollection();
-    errors.addFieldError("bogus", "error message");
-    LOGGER.debug("exception ex");
-    return errors;
-  }
+	/**
+	 * Any uncaught exception that occurs such as parsing errors
+	 * will be caught in this method.
+	 * @param e
+	 * @return Error collection
+	 */
+	@ExceptionHandler(value = Exception.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ResponseBody
+	public ErrorCollection processValidationError(Exception e) {
+		ErrorCollection errors = new ErrorCollection();
+		errors.addError(e.getLocalizedMessage(), e.getMessage());
 
-  @ExceptionHandler(MethodArgumentNotValidException.class)
-  @ResponseStatus(HttpStatus.BAD_REQUEST)
-  @ResponseBody
-  public ErrorCollection processValidationError(MethodArgumentNotValidException ex) {
-    BindingResult result = ex.getBindingResult();
-    List<FieldError> fieldErrors = result.getFieldErrors();
+		return errors;
+	}
 
-    return processFieldErrors(fieldErrors);
-  }
+	/**
+	 * Validation errors such as required fields that are not sent in the
+	 * request will throw a MethodArgumentNotValidException and be
+	 * handled in this method
+	 * @param ex
+	 * @return Error collection
+	 */
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ResponseBody
+	public ErrorCollection processValidationError(
+			MethodArgumentNotValidException ex) {
+		BindingResult result = ex.getBindingResult();
+		List<FieldError> fieldErrors = result.getFieldErrors();
 
-  private ErrorCollection processFieldErrors(List<FieldError> fieldErrors) {
-    ErrorCollection errors = new ErrorCollection();
+		return processFieldErrors(fieldErrors);
+	}
 
-    try {
-      LOGGER.debug("processfielderrors");
-    } finally {
-    }
+	private ErrorCollection processFieldErrors(List<FieldError> fieldErrors) {
+		ErrorCollection errors = new ErrorCollection();
+		String localizedErrorMessage = "";
 
-    for (FieldError fieldError : fieldErrors) {
-      try {
-        LOGGER.debug(fieldError.getField());
-        LOGGER.debug(fieldError.getDefaultMessage());
-        LOGGER.debug(fieldError.getCode());
-      } catch (Exception e) {
-      }
+		for (FieldError fieldError : fieldErrors) {
+			localizedErrorMessage = resolveLocalizedErrorMessage(fieldError);
+			errors.addError(fieldError.getField(),
+					localizedErrorMessage);
+		}
 
+		return errors;
+	}
 
-      // String localizedErrorMessage = resolveLocalizedErrorMessage(fieldError);
-      errors.addFieldError(fieldError.getField(), fieldError.getDefaultMessage());
-    }
+	private String resolveLocalizedErrorMessage(FieldError fieldError) {
+		Locale currentLocale = LocaleContextHolder.getLocale();
+		return messageSource.getMessage(fieldError, currentLocale);
+	}
 
-    return errors;
-  }
-
-  private String resolveLocalizedErrorMessage(FieldError fieldError) {
-    Locale currentLocale = LocaleContextHolder.getLocale();
-    String localizedErrorMessage = messageSource.getMessage(fieldError, currentLocale);
-
-    // If the message was not found, return the most accurate field error code instead.
-    // You can remove this check if you prefer to get the default error message.
-    if (localizedErrorMessage.equals(fieldError.getDefaultMessage())) {
-      String[] fieldErrorCodes = fieldError.getCodes();
-      localizedErrorMessage = fieldErrorCodes[0];
-    }
-
-    return localizedErrorMessage;
-  }
-
-  // @ExceptionHandler(TodoNotFoundException.class)
-  // @ResponseStatus(HttpStatus.NOT_FOUND)
-  // public void handleTodoNotFoundException(TodoNotFoundException ex) {
-  // LOGGER.debug("handling 404 error on a todo entry");
-  // }
+	// @ExceptionHandler(TodoNotFoundException.class)
+	// @ResponseStatus(HttpStatus.NOT_FOUND)
+	// public void handleTodoNotFoundException(TodoNotFoundException ex) {
+	// LOGGER.debug("handling 404 error on a todo entry");
+	// }
 }

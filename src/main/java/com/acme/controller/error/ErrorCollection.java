@@ -18,8 +18,8 @@ public class ErrorCollection implements Serializable {
     return errors;
   }
 
-  public void addFieldError(String field, String errorMessage) {
-    addError(new ErrorInfo(field, errorMessage, ""));
+  public void addError(String errorCode, String errorMessage) {
+    addError(new ErrorInfo(errorCode, errorMessage, ""));
   }
 
 }
