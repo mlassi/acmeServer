@@ -57,7 +57,7 @@ public class AdController {
   }
 
   @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
-  ResponseEntity<Long> removedAd(@PathVariable long id) {
+  ResponseEntity<Long> removeAd(@PathVariable long id) {
     Ad removedAd = this.adService.deleteById(id);
 
     return new ResponseEntity<Long>(id, (removedAd != null) ? HttpStatus.OK : HttpStatus.NOT_FOUND);
