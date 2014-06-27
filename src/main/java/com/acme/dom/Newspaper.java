@@ -34,12 +34,12 @@ public class Newspaper implements Identifiable<Long>, Serializable {
   @ManyToMany(mappedBy = "newspapers")
   private Set<Ad> ads;
 
-  public void addAd(Ad ad) {
-    if (ads == null) {
-      this.ads = new HashSet<Ad>();
-    }
-    this.ads.add(ad);
-  }
+//  public void addAd(Ad ad) {
+//    if (ads == null) {
+//      this.ads = new HashSet<Ad>();
+//    }
+//    this.ads.add(ad);
+//  }
 
   @Override
   public Long getId() {

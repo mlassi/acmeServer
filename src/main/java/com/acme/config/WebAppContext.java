@@ -1,10 +1,13 @@
 package com.acme.config;
 
+import java.util.List;
 import java.util.Properties;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -13,6 +16,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Configuration
 @ComponentScan(basePackages = {
@@ -27,6 +32,19 @@ public class WebAppContext extends WebMvcConfigurerAdapter {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/static/**").addResourceLocations("/static/");
+    }
+    
+    @Override
+    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+    	MappingJackson2HttpMessageConverter jacksonConverter = new MappingJackson2HttpMessageConverter();
+    	jacksonConverter.setObjectMapper(customObjectMapper());
+    	converters.add(jacksonConverter);
+    	super.configureMessageConverters(converters);
+    };
+   
+    @Bean
+    public ObjectMapper customObjectMapper() {
+    	return new CustomObjectMapper();
     }
 
     @Override

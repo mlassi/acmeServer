@@ -1,6 +1,8 @@
 package com.acme.dom;
 
 import java.io.Serializable;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -72,6 +74,10 @@ public class Ad implements Identifiable<Long>, Serializable {
 
   public void setTitle(String title) {
     this.title = title;
+  }
+  
+  public Date getCurrentDate() {
+	  return Calendar.getInstance().getTime();
   }
 
   // public Set<Newspaper> getNewspapers() {
