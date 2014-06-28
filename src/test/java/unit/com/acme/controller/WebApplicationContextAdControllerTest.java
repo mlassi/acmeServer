@@ -23,55 +23,68 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.acme.dom.Ad;
+import com.acme.dom.Newspaper;
 import com.acme.service.AdService;
 import com.acme.test.builder.AdBuilder;
+import com.acme.test.builder.NewspaperBuilder;
 import com.acme.test.util.TestUtil;
 
+
+/**
+ * We have to use an integration test to be able to ensure that the RestErrorHandler gets tested.
+ * The @ControllerAdvice can unfortunately only be tested when using the WebApplicationContext
+ * and not via the stand alone set up. This test class only contains the applicable
+ * error paths that needs to be tested.
+ *
+ */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration (classes = Application.class)
+@SpringApplicationConfiguration(classes = Application.class)
 @WebAppConfiguration
 public class WebApplicationContextAdControllerTest {
 
-	private MockMvc mockMvc;
-	private MockRestServiceServer mockServer;
-	private RestTemplate restTemplate;
-	
-    @Autowired
-    private AdService adServiceMock;
+  private MockMvc mockMvc;
+  private MockRestServiceServer mockServer;
+  private RestTemplate restTemplate;
 
-    @Autowired
-    private WebApplicationContext webApplicationContext;
-    
-    
+  @Autowired
+  private AdService adServiceMock;
 
-    @Before
-    public void setUp() {
-        //We have to reset our mock between tests because the mock objects
-        //are managed by the Spring container. If we would not reset them,
-        //stubbing and verified behavior would "leak" from one test to another.
-        //Mockito.reset(adServiceMock);
+  @Autowired
+  private WebApplicationContext webApplicationContext;
 
-    	this.restTemplate = new RestTemplate();
-        //mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-    	this.mockServer = MockRestServiceServer.createServer(restTemplate);
-    	this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
-    
-    }
-    
-    
-    @Test
-    public void addAd_givenEmptyDescription_shouldReturnOneValidationError() throws Exception {
-    	Ad added = AdBuilder.anAd().withAdTitle("my title").build();
-    	
-        mockMvc.perform(post("/ads")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(added))
-        )
-                .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$.errors", hasSize(1)))
-                .andExpect(jsonPath("$.errors[0].code", is("description")));
-        mockServer.verify();
+  @Before
+  public void setUp() {
+    this.restTemplate = new RestTemplate();
+    this.mockServer = MockRestServiceServer.createServer(restTemplate);
+    this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
+  }
 
-    }
+  @Test
+  public void addAd_givenEmptyDescription_shouldReturnOneDescriptionValidationError()
+      throws Exception {
+    Ad added = AdBuilder.anAd().withAdTitle("my title").build();
+
+    mockMvc
+        .perform(
+            post("/ads").contentType(TestUtil.APPLICATION_JSON_UTF8).content(
+                TestUtil.convertObjectToJsonBytes(added))).andExpect(status().isBadRequest())
+        .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+        .andExpect(jsonPath("$.errors", hasSize(1)))
+        .andExpect(jsonPath("$.errors[0].code", is("description")));
+    mockServer.verify();
+  }
+  
+  @Test
+  public void postAdToNewspaper_whenAdDoesNotExist_shouldReturnNotFound() throws Exception {
+    Newspaper newspaper = NewspaperBuilder.aNewspaper().withId(1).withPublicationName("New York Times").build();
+
+    mockMvc
+        .perform(
+            post("/ads/999/newspapers/newspaper").contentType(TestUtil.APPLICATION_JSON_UTF8).content(
+                TestUtil.convertObjectToJsonBytes(newspaper))).andExpect(status().isNotFound())
+        .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+        .andExpect(jsonPath("$.errors", hasSize(1)))
+        .andExpect(jsonPath("$.errors[0].code", is(RestErrorHandler.POST_AD_ERROR)));
+    mockServer.verify();
+  }
 }

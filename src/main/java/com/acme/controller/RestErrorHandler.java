@@ -11,6 +11,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -30,6 +31,8 @@ import com.acme.dom.exception.PublishAdException;
 @ControllerAdvice
 public class RestErrorHandler {
 
+  public final static String POST_AD_ERROR = "Post ad";
+  
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(RestErrorHandler.class);
 
@@ -45,11 +48,11 @@ public class RestErrorHandler {
 	 * @param ex
 	 */
 	 @ExceptionHandler(PublishAdException.class)
-	 @ResponseStatus(HttpStatus.NOT_FOUND)
-	 public void handlePublishAdException(PublishAdException ex) {
+	 public ResponseEntity<ErrorCollection> handlePublishAdException(PublishAdException ex) {
 		 LOGGER.debug(ex.getLocalizedMessage());
 		 ErrorCollection errors = new ErrorCollection();
-		 errors.addError(ex.getLocalizedMessage(), ex.getMessage());
+		 errors.addError(POST_AD_ERROR, ex.getMessage());
+		 return new ResponseEntity<ErrorCollection>(errors, HttpStatus.NOT_FOUND);
 	 }
 
 	/**
@@ -59,13 +62,12 @@ public class RestErrorHandler {
 	 * @return Error collection
 	 */
 	@ExceptionHandler(value = Exception.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ResponseBody
-	public ErrorCollection processValidationError(Exception e) {
+	public ResponseEntity<ErrorCollection> processValidationError(Exception e) {
 		ErrorCollection errors = new ErrorCollection();
 		errors.addError("Error", e.getMessage());
 
-		return errors;
+		return new ResponseEntity<ErrorCollection>(errors, HttpStatus.BAD_REQUEST);
 	}
 
 	/**
@@ -76,14 +78,13 @@ public class RestErrorHandler {
 	 * @return Error collection
 	 */
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ResponseBody
-	public ErrorCollection processValidationError(
+	public ResponseEntity<ErrorCollection> processValidationError(
 			MethodArgumentNotValidException ex) {
 		BindingResult result = ex.getBindingResult();
 		List<FieldError> fieldErrors = result.getFieldErrors();
 
-		return processFieldErrors(fieldErrors);
+		return new ResponseEntity<ErrorCollection>(processFieldErrors(fieldErrors), HttpStatus.BAD_REQUEST);
 	}
 
 	private ErrorCollection processFieldErrors(List<FieldError> fieldErrors) {
