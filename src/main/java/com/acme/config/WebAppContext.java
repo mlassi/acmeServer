@@ -77,9 +77,9 @@ public class WebAppContext extends WebMvcConfigurerAdapter {
         return viewResolver;
     }
     
-    private HttpMessageConverter<Object> createMappingJacksonConverter() {
-    	MappingJackson2HttpMessageConverter jacksonConverter = new MappingJackson2HttpMessageConverter();
-    	jacksonConverter.setObjectMapper(new CustomObjectMapper());
-    	return jacksonConverter;
-    }
+//    private HttpMessageConverter<Object> createMappingJacksonConverter() {
+//    	MappingJackson2HttpMessageConverter jacksonConverter = new MappingJackson2HttpMessageConverter();
+//    	jacksonConverter.setObjectMapper(new CustomObjectMapper());
+//    	return jacksonConverter;
+//    }
 }
