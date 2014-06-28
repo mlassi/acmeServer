@@ -8,12 +8,12 @@ public class ErrorInfo implements Serializable {
 
   private String code;
   private String message;
-  private String source;
 
-  public ErrorInfo(String code, String message, String source) {
+  public ErrorInfo() {}
+  
+  public ErrorInfo(String code, String message) {
     this.code = code;
     this.message = message;
-    this.source = source;
   }
 
   public String getCode() {
@@ -32,11 +32,4 @@ public class ErrorInfo implements Serializable {
     this.message = message;
   }
 
-  public String getSource() {
-    return source;
-  }
-
-  public void setSource(String source) {
-    this.source = source;
-  }
 }

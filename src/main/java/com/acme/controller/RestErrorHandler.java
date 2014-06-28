@@ -1,5 +1,6 @@
 package com.acme.controller;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -94,7 +95,7 @@ public class RestErrorHandler {
 			errors.addError(fieldError.getField(),
 					localizedErrorMessage);
 		}
-
+		
 		return errors;
 	}
 

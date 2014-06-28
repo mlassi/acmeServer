@@ -19,7 +19,7 @@ public class ErrorCollection implements Serializable {
   }
 
   public void addError(String errorCode, String errorMessage) {
-    addError(new ErrorInfo(errorCode, errorMessage, ""));
+    addError(new ErrorInfo(errorCode, errorMessage));
   }
 
 }

@@ -1,5 +1,6 @@
 package com.acme.controller;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -23,6 +24,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.acme.dom.Ad;
 import com.acme.service.AdService;
+import com.acme.test.builder.AdBuilder;
 import com.acme.test.util.TestUtil;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -58,8 +60,8 @@ public class WebApplicationContextAdControllerTest {
     
     
     @Test
-    public void add_EmptyTodoEntry_ShouldRenderFormViewAndReturnValidationErrorForTitle() throws Exception {
-    	Ad added = new Ad();
+    public void addAd_givenEmptyDescription_shouldReturnOneValidationError() throws Exception {
+    	Ad added = AdBuilder.anAd().withAdTitle("my title").build();
     	
         mockMvc.perform(post("/ads")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -67,14 +69,9 @@ public class WebApplicationContextAdControllerTest {
         )
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$.errors[0].code", is("title")))
-                .andExpect(jsonPath("$.errors[0].message", is("The title cannot be empty.")))
-        .andExpect(jsonPath("$.errors[1].code", is("description")))
-        .andExpect(jsonPath("$.errors[1].message", is("The description cannot be empty.")));
+                .andExpect(jsonPath("$.errors", hasSize(1)))
+                .andExpect(jsonPath("$.errors[0].code", is("description")));
         mockServer.verify();
-       // verifyZeroInteractions(adServiceMock);
-    	
-        
 
     }
 }
