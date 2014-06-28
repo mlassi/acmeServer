@@ -34,19 +34,12 @@ public class WebAppContext extends WebMvcConfigurerAdapter {
         registry.addResourceHandler("/static/**").addResourceLocations("/static/");
     }
     
-    @Override
-    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-    	MappingJackson2HttpMessageConverter jacksonConverter = new MappingJackson2HttpMessageConverter();
-    	jacksonConverter.setObjectMapper(customObjectMapper());
-    	converters.add(jacksonConverter);
-    	super.configureMessageConverters(converters);
-    };
-   
-    @Bean
-    public ObjectMapper customObjectMapper() {
-    	return new CustomObjectMapper();
-    }
-
+//    @Override
+//    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+//    	converters.add(createMappingJacksonConverter());
+//    	super.configureMessageConverters(converters);
+//    };
+    
     @Override
     public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
         configurer.enable();
@@ -82,5 +75,11 @@ public class WebAppContext extends WebMvcConfigurerAdapter {
         viewResolver.setSuffix(VIEW_RESOLVER_SUFFIX);
 
         return viewResolver;
+    }
+    
+    private HttpMessageConverter<Object> createMappingJacksonConverter() {
+    	MappingJackson2HttpMessageConverter jacksonConverter = new MappingJackson2HttpMessageConverter();
+    	jacksonConverter.setObjectMapper(new CustomObjectMapper());
+    	return jacksonConverter;
     }
 }

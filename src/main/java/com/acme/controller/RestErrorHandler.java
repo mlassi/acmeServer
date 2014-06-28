@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.acme.controller.error.ErrorCollection;
+import com.acme.dom.exception.PublishAdException;
 
 /**
  * 
@@ -37,6 +38,18 @@ public class RestErrorHandler {
 	public RestErrorHandler(MessageSource messageSource) {
 		this.messageSource = messageSource;
 	}
+	
+	/**
+	 * All posting of ad exceptions will be handled by this method
+	 * @param ex
+	 */
+	 @ExceptionHandler(PublishAdException.class)
+	 @ResponseStatus(HttpStatus.NOT_FOUND)
+	 public void handlePublishAdException(PublishAdException ex) {
+		 LOGGER.debug(ex.getLocalizedMessage());
+		 ErrorCollection errors = new ErrorCollection();
+		 errors.addError(ex.getLocalizedMessage(), ex.getMessage());
+	 }
 
 	/**
 	 * Any uncaught exception that occurs such as parsing errors
@@ -49,7 +62,7 @@ public class RestErrorHandler {
 	@ResponseBody
 	public ErrorCollection processValidationError(Exception e) {
 		ErrorCollection errors = new ErrorCollection();
-		errors.addError(e.getLocalizedMessage(), e.getMessage());
+		errors.addError("Error", e.getMessage());
 
 		return errors;
 	}
@@ -90,9 +103,5 @@ public class RestErrorHandler {
 		return messageSource.getMessage(fieldError, currentLocale);
 	}
 
-	// @ExceptionHandler(TodoNotFoundException.class)
-	// @ResponseStatus(HttpStatus.NOT_FOUND)
-	// public void handleTodoNotFoundException(TodoNotFoundException ex) {
-	// LOGGER.debug("handling 404 error on a todo entry");
-	// }
+	
 }

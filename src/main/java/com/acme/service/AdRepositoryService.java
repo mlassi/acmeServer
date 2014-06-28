@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.acme.dom.Ad;
 import com.acme.dom.Newspaper;
+import com.acme.dom.exception.PublishAdException;
 import com.acme.repository.AdRepository;
 
 @Service
@@ -46,10 +47,10 @@ public class AdRepositoryService implements AdService {
 
 
   @Override
-  public Ad postAdToNewspaper(long adId, Newspaper newspaper) {
+  public Ad postAdToNewspaper(long adId, Newspaper newspaper) throws PublishAdException {
     Ad foundAd = findById(adId);
     if (foundAd == null) {
-      return foundAd;
+      throw new PublishAdException(String.format("Could not find ad by id %s", adId));
     }
     foundAd.addNewspaper(newspaper);
     return this.adRepository.save(foundAd);

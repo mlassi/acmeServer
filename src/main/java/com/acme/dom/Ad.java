@@ -76,9 +76,9 @@ public class Ad implements Identifiable<Long>, Serializable {
     this.title = title;
   }
   
-  public Date getCurrentDate() {
-	  return Calendar.getInstance().getTime();
-  }
+//  public Date getCurrentDate() {
+//	  return Calendar.getInstance().getTime();
+//  }
 
   // public Set<Newspaper> getNewspapers() {
   // return this.newspapers;

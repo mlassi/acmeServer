@@ -14,11 +14,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.acme.test.util.TestUtil;
-import com.acme.test.builder.*;
+
 import java.util.Arrays;
 
 import org.junit.Before;
@@ -37,7 +37,7 @@ import com.acme.test.builder.AdBuilder;
 import com.acme.test.builder.NewspaperBuilder;
 import com.acme.dom.Ad;
 import com.acme.dom.Newspaper;
-import com.acme.test.util.TestUtil;
+import com.acme.dom.exception.PublishAdException;
 import com.acme.service.AdService;
 
 @Configuration
@@ -240,7 +240,7 @@ public class AdControllerTest {
       throws Exception {
     Newspaper newspaper =
         NewspaperBuilder.aNewspaper().withId(2L).withPublicationName("publication").build();
-    when(adServiceMock.postAdToNewspaper(99L, newspaper)).thenReturn(null);
+    when(adServiceMock.postAdToNewspaper(99L, newspaper)).thenThrow(new PublishAdException("error"));
 
     mockMvc
         .perform(

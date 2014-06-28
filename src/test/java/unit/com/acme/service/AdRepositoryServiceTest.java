@@ -20,6 +20,7 @@ import org.mockito.ArgumentCaptor;
 
 import com.acme.dom.Ad;
 import com.acme.dom.Newspaper;
+import com.acme.dom.exception.PublishAdException;
 import com.acme.repository.AdRepository;
 import com.acme.test.builder.AdBuilder;
 import com.acme.test.builder.NewspaperBuilder;
@@ -131,6 +132,20 @@ public class AdRepositoryServiceTest {
     verify(repositoryMock, times(1)).findOne(1L);
     verify(repositoryMock, times(1)).save(any(Ad.class));
     verifyNoMoreInteractions(repositoryMock);
+  }
+  
+  public void postAdToNewspaper_whenNotFound_shouldThrowException() throws Exception {
+	 // Ad adToPost = AdBuilder.anAd().withId(1L).withAdTitle("foo").withAdDescription("bar").build();
+	    Newspaper newspaper =
+	        NewspaperBuilder.aNewspaper().withId(2L).withPublicationName("publication").build();
+
+	    when(repositoryMock.findOne(1L)).thenThrow(new PublishAdException("error finding ad"));
+
+	    service.postAdToNewspaper(1L, newspaper);
+
+	    verify(repositoryMock, times(1)).findOne(1L);
+	    verify(repositoryMock, times(1)).save(any(Ad.class));
+	    verifyNoMoreInteractions(repositoryMock);
   }
 
   @Test
