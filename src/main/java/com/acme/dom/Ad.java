@@ -105,12 +105,12 @@ public class Ad implements Identifiable<Long>, Serializable {
   }
 
   @PrePersist
-  void createdAt() {
+  protected void createdDate() {
     this.createdDate = this.updatedDate = new Date();
   }
 
   @PreUpdate
-  void updatedDate() {
+  protected void updatedDate() {
     this.updatedDate = new Date();
   }
 

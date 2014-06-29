@@ -170,30 +170,6 @@ public class NewspaperControllerTest {
     verifyZeroInteractions(newspaperServiceMock);
   }
 
-  @Ignore
-  @Test
-  public void updateNewspaper_whenNewspaperIsValidButExceptionOccurs_shouldReturnHttpStatus500()
-      throws Exception {
-    Newspaper updatingNewspaper =
-        NewspaperBuilder.aNewspaper().withId(1).withPublicationName("New York Times").build();
-
-    when(newspaperServiceMock.save(updatingNewspaper)).thenThrow(
-        new IllegalArgumentException("stuff happens"));
-
-    mockMvc
-        .perform(
-            put("/newspapers/{id}", 1L).contentType(TestUtil.APPLICATION_JSON_UTF8).content(
-                TestUtil.convertObjectToJsonBytes(updatingNewspaper)))
-        .andExpect(status().isInternalServerError()).andReturn();
-
-    ArgumentCaptor<Newspaper> newspaperCaptor = ArgumentCaptor.forClass(Newspaper.class);
-    verify(newspaperServiceMock, times(1)).save(newspaperCaptor.capture());
-    verifyNoMoreInteractions(newspaperServiceMock);
-
-    Newspaper newspaperArgument = newspaperCaptor.getValue();
-    assertThat(newspaperArgument.getPublicationName(), is("New York Times"));
-  }
-
   @Test
   public void updateNewspaper_whenGivenIdThatCantBeFound_ReturnHttpStatus404() throws Exception {
     Newspaper updatingNewspaper =

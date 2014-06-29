@@ -1,6 +1,7 @@
 package com.acme.dom;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -9,6 +10,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
 import org.hibernate.validator.constraints.NotEmpty;
@@ -29,6 +32,11 @@ public class Newspaper implements Identifiable<Long>, Serializable {
   @NotEmpty
   private String publicationName;
 
+  @Column(name = "created_date")
+  private Date createdDate;
+
+  @Column(name = "updated_date")
+  private Date updatedDate;
 
   @ManyToMany(mappedBy = "newspapers")
   private Set<Ad> ads;
@@ -44,6 +52,24 @@ public class Newspaper implements Identifiable<Long>, Serializable {
 
   public void setPublicationName(String publicationName) {
     this.publicationName = publicationName;
+  }
+  
+  public Date getCreatedDate() {
+    return this.createdDate;
+  }
+
+  public Date getUpdatedDate() {
+    return this.updatedDate;
+  }
+
+  @PrePersist
+  protected void createdDate() {
+    this.createdDate = this.updatedDate = new Date();
+  }
+
+  @PreUpdate
+  protected void updatedDate() {
+    this.updatedDate = new Date();
   }
 
 

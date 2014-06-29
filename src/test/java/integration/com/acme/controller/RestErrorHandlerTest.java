@@ -2,7 +2,6 @@ package com.acme.controller;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -10,12 +9,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.test.web.servlet.MockMvc;
@@ -30,7 +29,6 @@ import com.acme.test.builder.AdBuilder;
 import com.acme.test.builder.NewspaperBuilder;
 import com.acme.test.util.TestUtil;
 
-
 /**
  * We have to use an integration test to be able to ensure that the RestErrorHandler gets tested.
  * The @ControllerAdvice can unfortunately only be tested when using the WebApplicationContext and
@@ -40,9 +38,9 @@ import com.acme.test.util.TestUtil;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
+@TransactionConfiguration(defaultRollback = true)
 @WebAppConfiguration
-public class WebApplicationContextAdControllerTest {
-
+public class RestErrorHandlerTest {
   private MockMvc mockMvc;
   private MockRestServiceServer mockServer;
   private RestTemplate restTemplate;
@@ -103,9 +101,6 @@ public class WebApplicationContextAdControllerTest {
         .andExpect(jsonPath("$.errors[0].code", is("Error")))
         .andExpect(jsonPath("$.errors[0].message", is(expectedErrorMessage)));
 
-    // .andExpect(jsonPath("$[0].code"), is("Error")));
-
-    // Failed to convert value of type 'java.lang.String' to required type 'java.lang.Long'
     mockServer.verify();
   }
 }
