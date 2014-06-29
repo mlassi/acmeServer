@@ -20,66 +20,66 @@ import org.springframework.web.servlet.view.JstlView;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Configuration
-@ComponentScan(basePackages = {
-        "com.acme.controller.AdController", "com.acme.controller.NewspaperController"
-})
+@ComponentScan(basePackages = {"com.acme.controller.AdController",
+    "com.acme.controller.NewspaperController"})
 @EnableWebMvc
 public class WebAppContext extends WebMvcConfigurerAdapter {
 
-	private static final String VIEW_RESOLVER_PREFIX = "/WEB-INF/jsp/";
-    private static final String VIEW_RESOLVER_SUFFIX = ".jsp";
+  private static final String VIEW_RESOLVER_PREFIX = "/WEB-INF/jsp/";
+  private static final String VIEW_RESOLVER_SUFFIX = ".jsp";
 
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/static/**").addResourceLocations("/static/");
-    }
-    
-//    @Override
-//    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-//    	converters.add(createMappingJacksonConverter());
-//    	super.configureMessageConverters(converters);
-//    };
-    
-    @Override
-    public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
-        configurer.enable();
-    }
-    
-    @Bean
-    public SimpleMappingExceptionResolver exceptionResolver() {
-        SimpleMappingExceptionResolver exceptionResolver = new SimpleMappingExceptionResolver();
+  @Override
+  public void addResourceHandlers(ResourceHandlerRegistry registry) {
+    registry.addResourceHandler("/static/**").addResourceLocations("/static/");
+  }
 
-        Properties exceptionMappings = new Properties();
+  @Override
+  public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+    converters.add(createMappingJacksonConverter());
+    super.configureMessageConverters(converters);
+  };
 
-        exceptionMappings.put("java.lang.Exception", "error/error");
-        exceptionMappings.put("java.lang.RuntimeException", "error/error");
+  @Override
+  public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
+    configurer.enable();
+  }
 
-        exceptionResolver.setExceptionMappings(exceptionMappings);
+  @Bean
+  public SimpleMappingExceptionResolver exceptionResolver() {
+    SimpleMappingExceptionResolver exceptionResolver = new SimpleMappingExceptionResolver();
 
-        Properties statusCodes = new Properties();
+    Properties exceptionMappings = new Properties();
 
-        statusCodes.put("error/404", "404");
-        statusCodes.put("error/error", "500");
+    exceptionMappings.put("java.lang.Exception", "error/error");
+    exceptionMappings.put("java.lang.RuntimeException", "error/error");
 
-        exceptionResolver.setStatusCodes(statusCodes);
+    exceptionResolver.setExceptionMappings(exceptionMappings);
 
-        return exceptionResolver;
-    }
+    Properties statusCodes = new Properties();
 
-    @Bean
-    public ViewResolver viewResolver() {
-        InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
+    statusCodes.put("error/404", "404");
+    statusCodes.put("error/error", "500");
 
-        viewResolver.setViewClass(JstlView.class);
-        viewResolver.setPrefix(VIEW_RESOLVER_PREFIX);
-        viewResolver.setSuffix(VIEW_RESOLVER_SUFFIX);
+    exceptionResolver.setStatusCodes(statusCodes);
 
-        return viewResolver;
-    }
-    
-//    private HttpMessageConverter<Object> createMappingJacksonConverter() {
-//    	MappingJackson2HttpMessageConverter jacksonConverter = new MappingJackson2HttpMessageConverter();
-//    	jacksonConverter.setObjectMapper(new CustomObjectMapper());
-//    	return jacksonConverter;
-//    }
+    return exceptionResolver;
+  }
+
+  @Bean
+  public ViewResolver viewResolver() {
+    InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
+
+    viewResolver.setViewClass(JstlView.class);
+    viewResolver.setPrefix(VIEW_RESOLVER_PREFIX);
+    viewResolver.setSuffix(VIEW_RESOLVER_SUFFIX);
+
+    return viewResolver;
+  }
+
+  private HttpMessageConverter<Object> createMappingJacksonConverter() {
+    MappingJackson2HttpMessageConverter jacksonConverter =
+        new MappingJackson2HttpMessageConverter();
+    jacksonConverter.setObjectMapper(new CustomObjectMapper());
+    return jacksonConverter;
+  }
 }

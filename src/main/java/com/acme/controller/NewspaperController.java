@@ -1,7 +1,5 @@
 package com.acme.controller;
 
-import java.util.Collection;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;

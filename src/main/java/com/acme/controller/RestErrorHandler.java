@@ -32,78 +32,77 @@ import com.acme.dom.exception.PublishAdException;
 public class RestErrorHandler {
 
   public final static String POST_AD_ERROR = "Post ad";
-  
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(RestErrorHandler.class);
 
-	private MessageSource messageSource;
+  private static final Logger LOGGER = LoggerFactory.getLogger(RestErrorHandler.class);
 
-	@Autowired
-	public RestErrorHandler(MessageSource messageSource) {
-		this.messageSource = messageSource;
-	}
-	
-	/**
-	 * All posting of ad exceptions will be handled by this method
-	 * @param ex
-	 */
-	 @ExceptionHandler(PublishAdException.class)
-	 public ResponseEntity<ErrorCollection> handlePublishAdException(PublishAdException ex) {
-		 LOGGER.debug(ex.getLocalizedMessage());
-		 ErrorCollection errors = new ErrorCollection();
-		 errors.addError(POST_AD_ERROR, ex.getMessage());
-		 return new ResponseEntity<ErrorCollection>(errors, HttpStatus.NOT_FOUND);
-	 }
+  private MessageSource messageSource;
 
-	/**
-	 * Any uncaught exception that occurs such as parsing errors
-	 * will be caught in this method.
-	 * @param e
-	 * @return Error collection
-	 */
-	@ExceptionHandler(value = Exception.class)
-	@ResponseBody
-	public ResponseEntity<ErrorCollection> processValidationError(Exception e) {
-		ErrorCollection errors = new ErrorCollection();
-		errors.addError("Error", e.getMessage());
+  @Autowired
+  public RestErrorHandler(MessageSource messageSource) {
+    this.messageSource = messageSource;
+  }
 
-		return new ResponseEntity<ErrorCollection>(errors, HttpStatus.BAD_REQUEST);
-	}
+  /**
+   * All posting of ad exceptions will be handled by this method
+   * 
+   * @param ex
+   */
+  @ExceptionHandler(PublishAdException.class)
+  public ResponseEntity<ErrorCollection> handlePublishAdException(PublishAdException ex) {
+    LOGGER.debug(ex.getLocalizedMessage());
+    ErrorCollection errors = new ErrorCollection();
+    errors.addError(POST_AD_ERROR, ex.getMessage());
+    return new ResponseEntity<ErrorCollection>(errors, HttpStatus.NOT_FOUND);
+  }
 
-	/**
-	 * Validation errors such as required fields that are not sent in the
-	 * request will throw a MethodArgumentNotValidException and be
-	 * handled in this method
-	 * @param ex
-	 * @return Error collection
-	 */
-	@ExceptionHandler(MethodArgumentNotValidException.class)
-	@ResponseBody
-	public ResponseEntity<ErrorCollection> processValidationError(
-			MethodArgumentNotValidException ex) {
-		BindingResult result = ex.getBindingResult();
-		List<FieldError> fieldErrors = result.getFieldErrors();
+  /**
+   * Any uncaught exception that occurs such as parsing errors will be caught in this method.
+   * 
+   * @param e
+   * @return Error collection
+   */
+  @ExceptionHandler(value = Exception.class)
+  @ResponseBody
+  public ResponseEntity<ErrorCollection> processValidationError(Exception e) {
+    ErrorCollection errors = new ErrorCollection();
+    errors.addError("Error", e.getMessage());
 
-		return new ResponseEntity<ErrorCollection>(processFieldErrors(fieldErrors), HttpStatus.BAD_REQUEST);
-	}
+    return new ResponseEntity<ErrorCollection>(errors, HttpStatus.BAD_REQUEST);
+  }
 
-	private ErrorCollection processFieldErrors(List<FieldError> fieldErrors) {
-		ErrorCollection errors = new ErrorCollection();
-		String localizedErrorMessage = "";
+  /**
+   * Validation errors such as required fields that are not sent in the request will throw a
+   * MethodArgumentNotValidException and be handled in this method
+   * 
+   * @param ex
+   * @return Error collection
+   */
+  @ExceptionHandler(MethodArgumentNotValidException.class)
+  @ResponseBody
+  public ResponseEntity<ErrorCollection> processValidationError(MethodArgumentNotValidException ex) {
+    BindingResult result = ex.getBindingResult();
+    List<FieldError> fieldErrors = result.getFieldErrors();
 
-		for (FieldError fieldError : fieldErrors) {
-			localizedErrorMessage = resolveLocalizedErrorMessage(fieldError);
-			errors.addError(fieldError.getField(),
-					localizedErrorMessage);
-		}
-		
-		return errors;
-	}
+    return new ResponseEntity<ErrorCollection>(processFieldErrors(fieldErrors),
+        HttpStatus.BAD_REQUEST);
+  }
 
-	private String resolveLocalizedErrorMessage(FieldError fieldError) {
-		Locale currentLocale = LocaleContextHolder.getLocale();
-		return messageSource.getMessage(fieldError, currentLocale);
-	}
+  private ErrorCollection processFieldErrors(List<FieldError> fieldErrors) {
+    ErrorCollection errors = new ErrorCollection();
+    String localizedErrorMessage = "";
 
-	
+    for (FieldError fieldError : fieldErrors) {
+      localizedErrorMessage = resolveLocalizedErrorMessage(fieldError);
+      errors.addError(fieldError.getField(), localizedErrorMessage);
+    }
+
+    return errors;
+  }
+
+  private String resolveLocalizedErrorMessage(FieldError fieldError) {
+    Locale currentLocale = LocaleContextHolder.getLocale();
+    return messageSource.getMessage(fieldError, currentLocale);
+  }
+
+
 }

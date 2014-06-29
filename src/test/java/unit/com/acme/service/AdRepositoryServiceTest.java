@@ -29,7 +29,7 @@ public class AdRepositoryServiceTest {
 
   private AdRepositoryService service;
   private AdRepository repositoryMock;
-  
+
   @Before
   public void setUp() {
     repositoryMock = mock(AdRepository.class);
@@ -133,19 +133,20 @@ public class AdRepositoryServiceTest {
     verify(repositoryMock, times(1)).save(any(Ad.class));
     verifyNoMoreInteractions(repositoryMock);
   }
-  
+
   public void postAdToNewspaper_whenNotFound_shouldThrowException() throws Exception {
-	 // Ad adToPost = AdBuilder.anAd().withId(1L).withAdTitle("foo").withAdDescription("bar").build();
-	    Newspaper newspaper =
-	        NewspaperBuilder.aNewspaper().withId(2L).withPublicationName("publication").build();
+    // Ad adToPost =
+    // AdBuilder.anAd().withId(1L).withAdTitle("foo").withAdDescription("bar").build();
+    Newspaper newspaper =
+        NewspaperBuilder.aNewspaper().withId(2L).withPublicationName("publication").build();
 
-	    when(repositoryMock.findOne(1L)).thenThrow(new PublishAdException("error finding ad"));
+    when(repositoryMock.findOne(1L)).thenThrow(new PublishAdException("error finding ad"));
 
-	    service.postAdToNewspaper(1L, newspaper);
+    service.postAdToNewspaper(1L, newspaper);
 
-	    verify(repositoryMock, times(1)).findOne(1L);
-	    verify(repositoryMock, times(1)).save(any(Ad.class));
-	    verifyNoMoreInteractions(repositoryMock);
+    verify(repositoryMock, times(1)).findOne(1L);
+    verify(repositoryMock, times(1)).save(any(Ad.class));
+    verifyNoMoreInteractions(repositoryMock);
   }
 
   @Test

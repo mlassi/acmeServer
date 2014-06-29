@@ -5,6 +5,7 @@ import java.nio.charset.Charset;
 
 import org.springframework.http.MediaType;
 
+import com.acme.config.CustomObjectMapper;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -17,7 +18,7 @@ public class TestUtil {
   private static final String CHARACTER = "a";
 
   public static byte[] convertObjectToJsonBytes(Object object) throws IOException {
-    ObjectMapper mapper = new ObjectMapper();
+    CustomObjectMapper mapper = new CustomObjectMapper();
     mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
     return mapper.writeValueAsBytes(object);
   }

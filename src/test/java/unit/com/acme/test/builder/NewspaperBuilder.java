@@ -22,16 +22,6 @@ public class NewspaperBuilder {
     return this;
   }
 
-//  public NewspaperBuilder withContact(Contact contact) {
-//    // this.newspaper.setBusinessContact(contact);
-//    return this;
-//  }
-
-  // public NewspaperBuilder fromContact(ContactBuilder contactBuilder) {
-  // // this.newspaper.setBusinessContact(contactBuilder.build());
-  // return this;
-  // }
-
   public Newspaper build() {
     return this.newspaper;
   }

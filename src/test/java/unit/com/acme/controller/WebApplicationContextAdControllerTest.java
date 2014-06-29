@@ -33,9 +33,9 @@ import com.acme.test.util.TestUtil;
 
 /**
  * We have to use an integration test to be able to ensure that the RestErrorHandler gets tested.
- * The @ControllerAdvice can unfortunately only be tested when using the WebApplicationContext
- * and not via the stand alone set up. This test class only contains the applicable
- * error paths that needs to be tested.
+ * The @ControllerAdvice can unfortunately only be tested when using the WebApplicationContext and
+ * not via the stand alone set up. This test class only contains the applicable error paths that
+ * needs to be tested.
  *
  */
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -74,36 +74,38 @@ public class WebApplicationContextAdControllerTest {
         .andExpect(jsonPath("$.errors[0].code", is("description")));
     mockServer.verify();
   }
-  
+
   @Test
   public void postAdToNewspaper_whenAdDoesNotExist_shouldReturnNotFound() throws Exception {
-    Newspaper newspaper = NewspaperBuilder.aNewspaper().withId(1).withPublicationName("New York Times").build();
+    Newspaper newspaper =
+        NewspaperBuilder.aNewspaper().withId(1).withPublicationName("New York Times").build();
 
     mockMvc
         .perform(
-            post("/ads/999/newspapers/newspaper").contentType(TestUtil.APPLICATION_JSON_UTF8).content(
-                TestUtil.convertObjectToJsonBytes(newspaper))).andExpect(status().isNotFound())
+            post("/ads/999/newspapers/newspaper").contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(newspaper)))
+        .andExpect(status().isNotFound())
         .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
         .andExpect(jsonPath("$.errors", hasSize(1)))
         .andExpect(jsonPath("$.errors[0].code", is(RestErrorHandler.POST_AD_ERROR)));
     mockServer.verify();
   }
-  
+
   @Test
   public void retrieveAd_whenGivenNonNumericInput_shouldReturnBadRequest() throws Exception {
-    String expectedErrorMessage = "Failed to convert value of type 'java.lang.String' to required type 'java.lang.Long';"
-        + " nested exception is java.lang.NumberFormatException: For input string: \"bogus_data\"";
-    mockMvc.perform(get("/ads/{ad}", "bogus_data"))
-    .andExpect(status().isBadRequest())
-    .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
-    .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+    String expectedErrorMessage =
+        "Failed to convert value of type 'java.lang.String' to required type 'java.lang.Long';"
+            + " nested exception is java.lang.NumberFormatException: For input string: \"bogus_data\"";
+    mockMvc.perform(get("/ads/{ad}", "bogus_data")).andExpect(status().isBadRequest())
+        .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+        .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
         .andExpect(jsonPath("$.errors", hasSize(1)))
         .andExpect(jsonPath("$.errors[0].code", is("Error")))
         .andExpect(jsonPath("$.errors[0].message", is(expectedErrorMessage)));
-        
-      //  .andExpect(jsonPath("$[0].code"), is("Error")));
-    
-        // Failed to convert value of type 'java.lang.String' to required type 'java.lang.Long'
+
+    // .andExpect(jsonPath("$[0].code"), is("Error")));
+
+    // Failed to convert value of type 'java.lang.String' to required type 'java.lang.Long'
     mockServer.verify();
   }
 }

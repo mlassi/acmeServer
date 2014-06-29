@@ -114,8 +114,7 @@ public class NewspaperControllerTest {
         .perform(
             post("/newspapers").contentType(TestUtil.APPLICATION_JSON_UTF8).content(
                 TestUtil.convertObjectToJsonBytes(addingNewspaper)))
-        .andExpect(status().isCreated())
-        .andReturn();
+        .andExpect(status().isCreated()).andReturn();
 
     ArgumentCaptor<Newspaper> newspaperCaptor = ArgumentCaptor.forClass(Newspaper.class);
     verify(newspaperServiceMock, times(1)).save(newspaperCaptor.capture());

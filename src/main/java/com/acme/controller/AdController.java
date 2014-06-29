@@ -64,14 +64,16 @@ public class AdController {
   }
 
   @RequestMapping(method = RequestMethod.POST, value = "/{id}/newspapers/{newspaper}")
-  ResponseEntity<Ad> postAdToNewspaper(@PathVariable Long id, @RequestBody Newspaper newspaper) throws PublishAdException {
+  ResponseEntity<Ad> postAdToNewspaper(@PathVariable Long id, @RequestBody Newspaper newspaper)
+      throws PublishAdException {
     Ad associatedAd = this.adService.postAdToNewspaper(id, newspaper);
     return new ResponseEntity<Ad>(associatedAd, (associatedAd != null) ? HttpStatus.CREATED
         : HttpStatus.NOT_FOUND);
   }
 
   @RequestMapping(method = RequestMethod.DELETE, value = "/{id}/newspapers/{newspaper}")
-  ResponseEntity<Ad> cancelAdInNewspaper(@PathVariable Long id, @RequestBody Newspaper newspaper) throws PublishAdException {
+  ResponseEntity<Ad> cancelAdInNewspaper(@PathVariable Long id, @RequestBody Newspaper newspaper)
+      throws PublishAdException {
     Ad cancelledAd = this.adService.cancelAdInNewspaper(id, newspaper);
     return new ResponseEntity<Ad>(cancelledAd, (cancelledAd != null) ? HttpStatus.OK
         : HttpStatus.NOT_FOUND);

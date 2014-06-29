@@ -28,7 +28,7 @@ public class AdRepositoryService implements AdService {
 
   @Override
   public Collection<Ad> findAll() {
-    return  (Collection<Ad>) this.adRepository.findAll();
+    return (Collection<Ad>) this.adRepository.findAll();
   }
 
   @Transactional(rollbackFor = {Exception.class})
@@ -60,10 +60,10 @@ public class AdRepositoryService implements AdService {
   public Ad cancelAdInNewspaper(long adId, Newspaper newspaper) {
     Ad ad = this.adRepository.findOne(adId);
     if (ad != null) {
-        ad.removeNewspaper(newspaper);
-        this.adRepository.save(ad);
-      }
-    return ad;
+      ad.removeNewspaper(newspaper);
+      this.adRepository.save(ad);
     }
-    
+    return ad;
+  }
+
 }

@@ -15,6 +15,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
 import org.hibernate.validator.constraints.NotEmpty;
@@ -39,13 +41,17 @@ public class Ad implements Identifiable<Long>, Serializable {
   @Column(name = "description")
   private String description;
 
+  @Column(name = "created_date")
+  private Date createdDate;
+
+  @Column(name = "updated_date")
+  private Date updatedDate;
+
   @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(name = "ads_newspapers", joinColumns = {@JoinColumn(name = "ads_id",
       referencedColumnName = "id")}, inverseJoinColumns = {@JoinColumn(name = "newspapers_id",
       referencedColumnName = "id")})
   private Set<Newspaper> newspapers;
-  // private AdCategoryType adCategoryType;
-  // private Date publishOnDate;
 
   public Ad() {
 
@@ -75,45 +81,37 @@ public class Ad implements Identifiable<Long>, Serializable {
   public void setTitle(String title) {
     this.title = title;
   }
-  
-//  public Date getCurrentDate() {
-//	  return Calendar.getInstance().getTime();
-//  }
-
-  // public Set<Newspaper> getNewspapers() {
-  // return this.newspapers;
-  // }
 
   public void addNewspaper(Newspaper newspaper) {
-	if(this.newspapers == null) {
-		this.newspapers = new HashSet<Newspaper>();
-	}
+    if (this.newspapers == null) {
+      this.newspapers = new HashSet<Newspaper>();
+    }
     this.newspapers.add(newspaper);
   }
 
-	public void removeNewspaper(Newspaper newspaper) {
-		if (this.newspapers == null) {
-			this.newspapers = new HashSet<Newspaper>();
-		}
-		this.newspapers.remove(newspaper);
-	}
+  public void removeNewspaper(Newspaper newspaper) {
+    if (this.newspapers == null) {
+      this.newspapers = new HashSet<Newspaper>();
+    }
+    this.newspapers.remove(newspaper);
+  }
 
-  /*
-   * public AdCategoryType getAdCategoryType() { return adCategoryType; }
-   * 
-   * public Date getPublishOnDate() { return publishOnDate; }
-   */
+  public Date getCreatedDate() {
+    return this.createdDate;
+  }
 
+  public Date getUpdatedDate() {
+    return this.updatedDate;
+  }
 
-  /*
-   * 
-   * 
-   * public void setAdCategoryType(AdCategoryType adCategoryType) { this.adCategoryType =
-   * adCategoryType; }
-   * 
-   * public void setPublishOnDate(Date publishOnDate) { this.publishOnDate = publishOnDate; }
-   */
+  @PrePersist
+  void createdAt() {
+    this.createdDate = this.updatedDate = new Date();
+  }
 
-
+  @PreUpdate
+  void updatedDate() {
+    this.updatedDate = new Date();
+  }
 
 }

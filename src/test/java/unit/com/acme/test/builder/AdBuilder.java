@@ -17,11 +17,6 @@ public class AdBuilder {
     return this;
   }
 
-//	public AdBuilder withAdCategoryType(AdCategoryType adCategoryType) {
-//		this.ad.setAdCategoryType(adCategoryType);
-//		return this;
-//	}
-
   public AdBuilder withAdTitle(String title) {
     this.ad.setTitle(title);
     return this;
@@ -32,10 +27,10 @@ public class AdBuilder {
     return this;
   }
 
-//	public AdBuilder withPublishOnDate(Date publishOnDate) {
-//		this.ad.setPublishOnDate(publishOnDate);
-//		return this;
-//	}
+  // public AdBuilder withPublishOnDate(Date publishOnDate) {
+  // this.ad.setPublishOnDate(publishOnDate);
+  // return this;
+  // }
 
   public Ad build() {
     return this.ad;

@@ -13,27 +13,25 @@ import com.acme.config.PersistenceContext;
 import com.acme.config.WebAppContext;
 
 @Configuration
-@ComponentScan(basePackages = {
-        "com.acme.service"
-})
+@ComponentScan(basePackages = {"com.acme.service"})
 @Import({WebAppContext.class, PersistenceContext.class})
 @PropertySource("classpath:application.properties")
 public class ApplicationContext {
-	private static final String MESSAGE_SOURCE_BASE_NAME = "i18n/messages";
+  private static final String MESSAGE_SOURCE_BASE_NAME = "i18n/messages";
 
-    @Bean
-    public MessageSource messageSource() {
-        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+  @Bean
+  public MessageSource messageSource() {
+    ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
 
-        messageSource.setBasename(MESSAGE_SOURCE_BASE_NAME);
-        messageSource.setUseCodeAsDefaultMessage(true);
+    messageSource.setBasename(MESSAGE_SOURCE_BASE_NAME);
+    messageSource.setUseCodeAsDefaultMessage(true);
 
-        return messageSource;
-    }
+    return messageSource;
+  }
 
-    @Bean
-    public PropertySourcesPlaceholderConfigurer propertyPlaceHolderConfigurer() {
-        return new PropertySourcesPlaceholderConfigurer();
-    }
+  @Bean
+  public PropertySourcesPlaceholderConfigurer propertyPlaceHolderConfigurer() {
+    return new PropertySourcesPlaceholderConfigurer();
+  }
 
 }

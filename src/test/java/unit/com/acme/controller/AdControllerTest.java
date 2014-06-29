@@ -86,7 +86,7 @@ public class AdControllerTest {
     Ad second =
         AdBuilder.anAd().withId(2L).withAdTitle("second ad").withAdDescription("duo").build();
 
-    //when(adServiceMock.findAll()).thenReturn(Arrays.asList(first, second));
+    // when(adServiceMock.findAll()).thenReturn(Arrays.asList(first, second));
     when(adServiceMock.findAll()).thenReturn((Arrays.asList(first, second)));
 
     mockMvc.perform(get("/ads")).andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(2)))
@@ -135,20 +135,19 @@ public class AdControllerTest {
   public void addAd_EmptyAd_ShouldReturnInvalidRequest() throws Exception {
     Ad ad = new Ad();
 
-		MvcResult result = mockMvc
-				.perform(
-						post("/ads")
-								.contentType(TestUtil.APPLICATION_JSON_UTF8)
-								.content(TestUtil.convertObjectToJsonBytes(ad)))
-				.andExpect(status().isBadRequest())
-				.andReturn();
-		// .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
-		// .andExpect(jsonPath("$.fieldErrorsgjhgjgjh", hasSize(1)))
-		// .andExpect(jsonPath("$.fieldErrors[0].path", is("title")))
-		// .andExpect(jsonPath("$.fieldErrors[0].message",
-		// is("The title cannot be empty.")));
+    MvcResult result =
+        mockMvc
+            .perform(
+                post("/ads").contentType(TestUtil.APPLICATION_JSON_UTF8).content(
+                    TestUtil.convertObjectToJsonBytes(ad))).andExpect(status().isBadRequest())
+            .andReturn();
+    // .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+    // .andExpect(jsonPath("$.fieldErrorsgjhgjgjh", hasSize(1)))
+    // .andExpect(jsonPath("$.fieldErrors[0].path", is("title")))
+    // .andExpect(jsonPath("$.fieldErrors[0].message",
+    // is("The title cannot be empty.")));
 
-   String content = result.getResponse().getContentAsString();
+    String content = result.getResponse().getContentAsString();
     verifyZeroInteractions(adServiceMock);
   }
 
@@ -223,7 +222,7 @@ public class AdControllerTest {
     Ad ad = AdBuilder.anAd().withId(1L).withAdTitle("foo").withAdDescription("bar").build();
     Newspaper newspaper =
         NewspaperBuilder.aNewspaper().withId(2L).withPublicationName("publication").build();
-   
+
     when(adServiceMock.postAdToNewspaper(eq(1L), any(Newspaper.class))).thenReturn(ad);
 
     mockMvc
@@ -240,7 +239,8 @@ public class AdControllerTest {
       throws Exception {
     Newspaper newspaper =
         NewspaperBuilder.aNewspaper().withId(2L).withPublicationName("publication").build();
-    when(adServiceMock.postAdToNewspaper(99L, newspaper)).thenThrow(new PublishAdException("error"));
+    when(adServiceMock.postAdToNewspaper(99L, newspaper))
+        .thenThrow(new PublishAdException("error"));
 
     mockMvc
         .perform(
