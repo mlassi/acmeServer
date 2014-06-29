@@ -3,6 +3,7 @@ package com.acme.controller;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -85,6 +86,24 @@ public class WebApplicationContextAdControllerTest {
         .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
         .andExpect(jsonPath("$.errors", hasSize(1)))
         .andExpect(jsonPath("$.errors[0].code", is(RestErrorHandler.POST_AD_ERROR)));
+    mockServer.verify();
+  }
+  
+  @Test
+  public void retrieveAd_whenGivenNonNumericInput_shouldReturnBadRequest() throws Exception {
+    String expectedErrorMessage = "Failed to convert value of type 'java.lang.String' to required type 'java.lang.Long';"
+        + " nested exception is java.lang.NumberFormatException: For input string: \"bogus_data\"";
+    mockMvc.perform(get("/ads/{ad}", "bogus_data"))
+    .andExpect(status().isBadRequest())
+    .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+    .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+        .andExpect(jsonPath("$.errors", hasSize(1)))
+        .andExpect(jsonPath("$.errors[0].code", is("Error")))
+        .andExpect(jsonPath("$.errors[0].message", is(expectedErrorMessage)));
+        
+      //  .andExpect(jsonPath("$[0].code"), is("Error")));
+    
+        // Failed to convert value of type 'java.lang.String' to required type 'java.lang.Long'
     mockServer.verify();
   }
 }
