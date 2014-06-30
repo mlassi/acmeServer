@@ -1,26 +1,8 @@
 acmeServer
 ==========
-mvn spring-boot:run
+To install acmeServer, run the command: mvn clean install
 
+This was built with Spring Boot, you can run it from the command line with the command: mvn spring-boot:run
 
-Ads
-GET: curl http://localhost:8080/ads/1
+There is one integration test, RestErrorHandlerTest which is currently set to @Ignore. I didn't create a separate maven profile for integration tests. It works if the database is up. If you want to run the application, look over the database script database.sql and change it accordingly. I used MySQL for this project.
 
-POST: curl -i -X POST -H "Content-Type:application/json" 
--d '{  "title":"good maid", "description":"good at cleaning, cooking is a plus"} ' http://localhost:8080/ads
-
-DELETE:  curl -i -X DELETE -H "Content-Type:application/json"  http://localhost:8080/ads/3
-
-Publish Ad: curl -i -X POST -H "Content-Type:application/json" -d '{ "id": 5, "publicationName": "Angular JS in Action"} ' http://localhost:8080/ads/14/newspapers
-
-Newspapers
-
-
-POST: 
-tionName":"Java Magazine"} ' http://localhost:8080/newspapers
-
-PUT: curl -i -X PUT -H "Content-Type:application/json" -d '{ "id":3, "publicationName":"Java Magazine 2"} ' http://localhost:8080/newspapers
-
-
-
-DELETE:  curl -i -X DELETE -H "Content-Type:application/json"  http://localhost:8080/newspapers/4

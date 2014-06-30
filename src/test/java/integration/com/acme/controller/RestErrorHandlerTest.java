@@ -41,6 +41,7 @@ import com.acme.test.util.TestUtil;
 @SpringApplicationConfiguration(classes = Application.class)
 @TransactionConfiguration(defaultRollback = true)
 @WebAppConfiguration
+@Ignore
 public class RestErrorHandlerTest {
   private MockMvc mockMvc;
   private MockRestServiceServer mockServer;
