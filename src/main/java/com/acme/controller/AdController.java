@@ -40,7 +40,7 @@ public class AdController {
 
   @RequestMapping(method = GET)
   Collection<Ad> retrieveAllAdsAd() {
-    return (Collection<Ad>) this.adService.findAll();
+    return this.adService.findAll();
   }
 
   @RequestMapping(method = RequestMethod.POST)

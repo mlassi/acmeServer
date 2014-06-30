@@ -17,8 +17,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.acme.test.util.TestUtil;
-
 import java.util.Arrays;
 
 import org.junit.Before;
@@ -30,15 +28,15 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import com.acme.test.builder.AdBuilder;
-import com.acme.test.builder.NewspaperBuilder;
 import com.acme.dom.Ad;
 import com.acme.dom.Newspaper;
 import com.acme.dom.exception.PublishAdException;
 import com.acme.service.AdService;
+import com.acme.test.builder.AdBuilder;
+import com.acme.test.builder.NewspaperBuilder;
+import com.acme.test.util.TestUtil;
 
 @Configuration
 @WebAppConfiguration
@@ -135,19 +133,12 @@ public class AdControllerTest {
   public void addAd_EmptyAd_ShouldReturnInvalidRequest() throws Exception {
     Ad ad = new Ad();
 
-    MvcResult result =
         mockMvc
             .perform(
                 post("/ads").contentType(TestUtil.APPLICATION_JSON_UTF8).content(
                     TestUtil.convertObjectToJsonBytes(ad))).andExpect(status().isBadRequest())
             .andReturn();
-    // .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
-    // .andExpect(jsonPath("$.fieldErrorsgjhgjgjh", hasSize(1)))
-    // .andExpect(jsonPath("$.fieldErrors[0].path", is("title")))
-    // .andExpect(jsonPath("$.fieldErrors[0].message",
-    // is("The title cannot be empty.")));
 
-    String content = result.getResponse().getContentAsString();
     verifyZeroInteractions(adServiceMock);
   }
 

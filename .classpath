@@ -72,18 +72,15 @@
 	<classpathentry kind="var" path="M2_REPO/org/hamcrest/hamcrest-core/1.1/hamcrest-core-1.1.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/mockito/mockito-core/1.9.5/mockito-core-1.9.5.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/hamcrest/hamcrest-library/1.3/hamcrest-library-1.3.jar"/>
-	<classpathentry kind="var" path="M2_REPO/org/springframework/spring-test/4.0.3.RELEASE/spring-test-4.0.3.RELEASE.jar" sourcepath="/SPRING_SOURCE"/>
+	<classpathentry kind="var" path="M2_REPO/org/springframework/spring-test/4.0.3.RELEASE/spring-test-4.0.3.RELEASE.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/jolbox/bonecp/0.8.0.RELEASE/bonecp-0.8.0.RELEASE.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/google/guava/guava/15.0/guava-15.0.jar"/>
 	<classpathentry kind="var" path="M2_REPO/mysql/mysql-connector-java/5.1.31/mysql-connector-java-5.1.31.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/hibernate/hibernate-validator/4.2.0.Final/hibernate-validator-4.2.0.Final.jar"/>
-	<classpathentry kind="var" path="M2_REPO/org/hamcrest/hamcrest-all/1.3/hamcrest-all-1.3.jar" sourcepath="/HAMCREST_1_3/hamcrest-all-1.3-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/hamcrest/hamcrest-all/1.3/hamcrest-all-1.3.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/jayway/jsonpath/json-path/0.8.1/json-path-0.8.1.jar"/>
 	<classpathentry kind="var" path="M2_REPO/net/minidev/json-smart/1.1.1/json-smart-1.1.1.jar"/>
 	<classpathentry kind="var" path="M2_REPO/commons-lang/commons-lang/2.6/commons-lang-2.6.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/jayway/jsonpath/json-path-assert/0.8.1/json-path-assert-0.8.1.jar"/>
-	<classpathentry kind="var" path="M2_REPO/com/github/springtestdbunit/spring-test-dbunit/1.0.0/spring-test-dbunit-1.0.0.jar"/>
-	<classpathentry kind="var" path="M2_REPO/org/dbunit/dbunit/2.4.9/dbunit-2.4.9.jar"/>
-	<classpathentry kind="var" path="M2_REPO/commons-collections/commons-collections/3.2.1/commons-collections-3.2.1.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

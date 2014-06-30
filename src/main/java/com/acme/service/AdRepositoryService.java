@@ -45,7 +45,7 @@ public class AdRepositoryService implements AdService {
     return foundAd;
   }
 
-
+  @Transactional(rollbackFor = {Exception.class})
   @Override
   public Ad postAdToNewspaper(long adId, Newspaper newspaper) throws PublishAdException {
     Ad foundAd = findById(adId);
@@ -56,14 +56,15 @@ public class AdRepositoryService implements AdService {
     return this.adRepository.save(foundAd);
   }
 
+  @Transactional(rollbackFor = {Exception.class})
   @Override
-  public Ad cancelAdInNewspaper(long adId, Newspaper newspaper) {
-    Ad ad = this.adRepository.findOne(adId);
-    if (ad != null) {
-      ad.removeNewspaper(newspaper);
-      this.adRepository.save(ad);
+  public Ad cancelAdInNewspaper(long adId, Newspaper newspaper) throws PublishAdException {
+    Ad foundAd = this.adRepository.findOne(adId);
+    if (foundAd == null) {
+      throw new PublishAdException(String.format("Could not find ad by id %s", adId));
     }
-    return ad;
+    foundAd.removeNewspaper(newspaper);
+    return this.adRepository.save(foundAd);
   }
 
 }

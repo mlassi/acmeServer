@@ -1,5 +1,7 @@
 package com.acme.controller;
 
+import java.util.Collection;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +38,7 @@ public class NewspaperController {
   }
 
   @RequestMapping(method = RequestMethod.GET)
-  Iterable<Newspaper> retrieveAllNewspapers() {
+  Collection<Newspaper> retrieveAllNewspapers() {
     return this.newspaperService.findAll();
   }
 

@@ -19,7 +19,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.Arrays;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;

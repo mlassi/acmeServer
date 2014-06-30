@@ -17,8 +17,6 @@ import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 @Configuration
 @ComponentScan(basePackages = {"com.acme.controller.AdController",
     "com.acme.controller.NewspaperController"})

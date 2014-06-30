@@ -15,7 +15,10 @@ import java.util.HashSet;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.mockito.ArgumentCaptor;
 
 import com.acme.dom.Ad;
@@ -119,6 +122,7 @@ public class AdRepositoryServiceTest {
     assertThat(adToDelete, is(existingAd));
   }
 
+  
   @Test
   public void postAdToNewspaper_whenFound_shouldReturnAd() throws Exception {
     Ad adToPost = AdBuilder.anAd().withId(1L).withAdTitle("foo").withAdDescription("bar").build();
@@ -133,24 +137,23 @@ public class AdRepositoryServiceTest {
     verify(repositoryMock, times(1)).save(any(Ad.class));
     verifyNoMoreInteractions(repositoryMock);
   }
-
-  public void postAdToNewspaper_whenNotFound_shouldThrowException() throws Exception {
-    // Ad adToPost =
-    // AdBuilder.anAd().withId(1L).withAdTitle("foo").withAdDescription("bar").build();
+  
+  @Rule 
+  public ExpectedException thrownPostAd = ExpectedException.none();
+  
+  @Test
+  public void postAdToNewspaper_whenAdNotFound_shouldThrowPublishAdException() throws Exception {
     Newspaper newspaper =
         NewspaperBuilder.aNewspaper().withId(2L).withPublicationName("publication").build();
-
-    when(repositoryMock.findOne(1L)).thenThrow(new PublishAdException("error finding ad"));
-
-    service.postAdToNewspaper(1L, newspaper);
-
-    verify(repositoryMock, times(1)).findOne(1L);
-    verify(repositoryMock, times(1)).save(any(Ad.class));
-    verifyNoMoreInteractions(repositoryMock);
+    
+    thrownPostAd.expect(PublishAdException.class);
+    when(service.postAdToNewspaper(99L, newspaper)).thenThrow(new PublishAdException("Could not find ad by id 99"));
+    
+    service.postAdToNewspaper(99L, newspaper);
   }
 
   @Test
-  public void cancelAdToNewspaper_whenFound_shouldReturnAd() throws Exception {
+  public void cancelAdInNewspaper_whenFound_shouldReturnAd() throws Exception {
     Ad adToCancel = AdBuilder.anAd().withId(1L).withAdTitle("foo").withAdDescription("bar").build();
     Newspaper newspaper =
         NewspaperBuilder.aNewspaper().withId(2L).withPublicationName("publication").build();
@@ -161,6 +164,20 @@ public class AdRepositoryServiceTest {
     verify(repositoryMock, times(1)).findOne(1L);
     verify(repositoryMock, times(1)).save(any(Ad.class));
     verifyNoMoreInteractions(repositoryMock);
+  }
+  
+  @Rule 
+  public ExpectedException thrownCancelAd = ExpectedException.none();
+  
+  @Test
+  public void cancelAdInNewspaper_whenAdNotFound_shouldThrowPublishAdException() throws Exception {
+    Newspaper newspaper =
+        NewspaperBuilder.aNewspaper().withId(2L).withPublicationName("publication").build();
+    
+    thrownCancelAd.expect(PublishAdException.class);
+    when(service.cancelAdInNewspaper(99L, newspaper)).thenThrow(new PublishAdException("Could not find ad by id 99"));
+    
+    service.cancelAdInNewspaper(99L, newspaper);
   }
 
 }
